@@ -223,6 +223,8 @@ long double collect_dust(long double last_mass, long double *new_dust,
 	reduced_mass = pow(temp,(1.0 / 4.0));
 	r_inner = inner_effect_limit(a, e, reduced_mass);
 	r_outer = outer_effect_limit(a, e, reduced_mass);
+
+	fprintf(stdout,"  . collecting dust between %Lg and %Lg\n", r_inner, r_outer);
 	
 	if ((r_inner < 0.0))
 		r_inner = 0.0;
@@ -272,7 +274,10 @@ long double collect_dust(long double last_mass, long double *new_dust,
 			new_mass  = volume * mass_density;
 			*new_gas  = volume * gas_density;
 			*new_dust = new_mass - *new_gas;
-			
+
+			fprintf(stdout,"   . new_mass %Lg = vol(%Lg) * density(%Lg)\n", 
+					new_mass, volume, mass_density);
+
 			next_mass = collect_dust(last_mass, &next_dust, &next_gas,
 									 a,e,crit_mass, dust_band->next_band);
 			
@@ -318,10 +323,14 @@ void accrete_dust(long double *seed_mass, long double *new_dust, long double *ne
 		temp_mass = new_mass;
 		new_mass = collect_dust(new_mass, new_dust, new_gas, 
 								a,e,crit_mass, dust_head);
-		fprintf(stdout,".");
+		
+		fprintf(stdout," . accumulated %Lg (%Lg dust, %Lg gas)\n", 
+		new_mass,
+		new_dust,
+		new_gas
+		);
 	}
 	while (!(((new_mass - temp_mass) < (0.0001 * temp_mass))));
-	fprintf(stdout,"\n");
 	fprintf(stdout,"update_dust_lanes\n");
 	(*seed_mass) = (*seed_mass) + new_mass;
 	update_dust_lanes(r_inner,r_outer,(*seed_mass),crit_mass,body_inner_bound,body_outer_bound);
