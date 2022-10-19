@@ -224,7 +224,7 @@ long double collect_dust(long double last_mass, long double *new_dust,
 	r_inner = inner_effect_limit(a, e, reduced_mass);
 	r_outer = outer_effect_limit(a, e, reduced_mass);
 
-	fprintf(stdout,"  . collecting dust between %Lg and %Lg\n", r_inner, r_outer);
+	// fprintf(stdout,"  . mass of %Lg collecting dust between %Lg and %Lg\n", last_mass, r_inner, r_outer);
 	
 	if ((r_inner < 0.0))
 		r_inner = 0.0;
@@ -275,8 +275,8 @@ long double collect_dust(long double last_mass, long double *new_dust,
 			*new_gas  = volume * gas_density;
 			*new_dust = new_mass - *new_gas;
 
-			fprintf(stdout,"   . new_mass %Lg = vol(%Lg) * density(%Lg)\n", 
-					new_mass, volume, mass_density);
+			// fprintf(stdout,"   . new_mass %Lg = vol(%Lg) * density(%Lg)\n", 
+			// 		new_mass, volume, mass_density);
 
 			next_mass = collect_dust(last_mass, &next_dust, &next_gas,
 									 a,e,crit_mass, dust_band->next_band);
@@ -284,6 +284,9 @@ long double collect_dust(long double last_mass, long double *new_dust,
 			*new_gas  = *new_gas + next_gas;
 			*new_dust = *new_dust + next_dust;
 			
+			// fprintf(stdout,"   . accumulated_mass %Lg new_mass(%Lg) from dust(%Lg) gas(%Lg)\n", 
+			// 		new_mass + next_mass, new_mass, new_dust, new_gas);
+
 			return(new_mass + next_mass);
 		}
 	}
@@ -317,21 +320,21 @@ void accrete_dust(long double *seed_mass, long double *new_dust, long double *ne
 	long double	new_mass = (*seed_mass);
 	long double	temp_mass;
 	
-	fprintf(stdout,"accrete_dust\n");
+	// fprintf(stdout,"accrete_dust\n");
 	do
 	{
 		temp_mass = new_mass;
 		new_mass = collect_dust(new_mass, new_dust, new_gas, 
 								a,e,crit_mass, dust_head);
 		
-		fprintf(stdout," . accumulated %Lg (%Lg dust, %Lg gas)\n", 
-		new_mass,
-		new_dust,
-		new_gas
-		);
+		// fprintf(stdout," . accumulated %Lg (%Lg dust, %Lg gas)\n", 
+		// new_mass,
+		// new_dust,
+		// new_gas
+		// );
 	}
 	while (!(((new_mass - temp_mass) < (0.0001 * temp_mass))));
-	fprintf(stdout,"update_dust_lanes\n");
+	// fprintf(stdout,"update_dust_lanes\n");
 	(*seed_mass) = (*seed_mass) + new_mass;
 	update_dust_lanes(r_inner,r_outer,(*seed_mass),crit_mass,body_inner_bound,body_outer_bound);
 }
@@ -664,7 +667,7 @@ planet_pointer dist_planetary_masses(long double stell_mass_ratio,
 						   outer_effect_limit(a, e, mass))) 
 		{
 			// if (flag_verbose & 0x0100)
-				fprintf (stdout, "Injecting protoplanet at %Lg AU.\n", a);
+				fprintf (stdout, "Injecting protoplanet (mass=%Lg) at %Lg AU (e=%Lg).\n", mass, a, e);
 			
 			dust_density = dust_density_coeff * sqrt(stell_mass_ratio)
 						   * exp(-ALPHA * pow(a,(1.0 / N)));
