@@ -6,7 +6,15 @@ details.) It's called StarGen because there are already enough versions that
 call themselves starform to be confusing. StarGen's preferred output format
 its Web pages.
 
-There are 4 differen distributions available. All of them contain:
+
+USAGE:
+stargen needs some parameters passed into function, otherwise it will just
+give you the 'help' type of information. Here is a working example:
+
+   ./stargen -s3 -t -v5
+
+
+There are 4 different distributions available. All of them contain:
 
     ReadMe.txt                  The file you are reading
     Credits.txt                 The history of the program
@@ -63,6 +71,7 @@ tools from the command line.
 To get more detailed documentation on building StarGen, feed the file
 Manual2-Building.html in the help folder or directory to a Web browser or
 Help viewer that reads HTML files.
+
 
 JimB. aka Brons
 Jim Burrows
